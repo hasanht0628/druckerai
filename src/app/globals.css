@@ -1,0 +1,146 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --paper: oklch(0.985 0.005 80);
+    --paper-2: oklch(0.972 0.006 80);
+    --paper-3: oklch(0.955 0.007 80);
+    --ink: oklch(0.18 0.01 80);
+    --ink-2: oklch(0.32 0.01 80);
+    --ink-3: oklch(0.50 0.01 80);
+    --ink-4: oklch(0.68 0.008 80);
+    --rule: oklch(0.90 0.008 80);
+    --rule-2: oklch(0.82 0.01 80);
+    --burnt: oklch(0.55 0.13 38);
+    --burnt-soft: oklch(0.93 0.04 38);
+    --burnt-ink: oklch(0.35 0.10 38);
+    --good: oklch(0.55 0.10 150);
+    --good-soft: oklch(0.94 0.03 150);
+    --warn: oklch(0.62 0.13 65);
+    --warn-soft: oklch(0.94 0.04 65);
+    --bad: oklch(0.55 0.18 25);
+    --bad-soft: oklch(0.94 0.04 25);
+
+    --background: var(--paper);
+    --foreground: var(--ink);
+    --card: var(--paper);
+    --card-foreground: var(--ink);
+    --popover: var(--paper);
+    --popover-foreground: var(--ink);
+    --primary: var(--ink);
+    --primary-foreground: var(--paper);
+    --secondary: var(--paper-2);
+    --secondary-foreground: var(--ink);
+    --muted: var(--paper-2);
+    --muted-foreground: var(--ink-3);
+    --accent: var(--burnt);
+    --accent-foreground: white;
+    --destructive: var(--bad);
+    --destructive-foreground: white;
+    --border: var(--rule);
+    --input: var(--rule);
+    --ring: var(--burnt);
+    --radius: 0.625rem;
+  }
+
+  .dark {
+    --paper: oklch(0.18 0.01 80);
+    --paper-2: oklch(0.21 0.01 80);
+    --paper-3: oklch(0.25 0.01 80);
+    --ink: oklch(0.96 0.005 80);
+    --ink-2: oklch(0.85 0.005 80);
+    --ink-3: oklch(0.65 0.008 80);
+    --ink-4: oklch(0.48 0.008 80);
+    --rule: oklch(0.32 0.01 80);
+    --rule-2: oklch(0.40 0.01 80);
+    --burnt-soft: oklch(0.30 0.06 38);
+    --good-soft: oklch(0.28 0.04 150);
+    --warn-soft: oklch(0.30 0.05 65);
+    --bad-soft: oklch(0.30 0.05 25);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans), system-ui, sans-serif;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer components {
+  .view {
+    @apply w-full max-w-6xl px-6 py-8;
+  }
+
+  .view-narrow {
+    @apply max-w-3xl;
+  }
+
+  .section-eyebrow {
+    @apply font-mono text-[10px] uppercase tracking-[0.2em] text-ink-3;
+  }
+
+  .section-title {
+    @apply font-serif text-[22px] font-normal leading-tight tracking-[-0.01em] text-ink;
+  }
+
+  .precept {
+    @apply max-w-[60ch] font-serif text-lg italic leading-relaxed text-ink-3;
+  }
+
+  .text-display {
+    @apply font-serif text-[44px] leading-[1.05] tracking-[-0.02em] text-ink;
+  }
+
+  .editorial-card {
+    @apply rounded-lg border border-border bg-paper p-4;
+  }
+
+  .editorial-card-flat {
+    @apply rounded-lg bg-paper-2 p-4;
+  }
+
+  .tag {
+    @apply inline-flex items-center gap-1 rounded-full border border-border bg-paper px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.1em] text-ink-3;
+  }
+
+  .tag-accent {
+    color: var(--burnt-ink);
+    background: var(--burnt-soft);
+    border-color: transparent;
+  }
+
+  .tag-good {
+    color: var(--good);
+    background: var(--good-soft);
+    border-color: transparent;
+  }
+
+  .tag-warn {
+    color: var(--warn);
+    background: var(--warn-soft);
+    border-color: transparent;
+  }
+
+  .tag-bad {
+    color: var(--bad);
+    background: var(--bad-soft);
+    border-color: transparent;
+  }
+
+  .metric-num {
+    @apply font-serif text-[44px] leading-none tracking-[-0.02em] text-ink;
+  }
+
+  .metric-label {
+    @apply font-mono text-[10px] uppercase tracking-[0.18em] text-ink-3;
+  }
+}

@@ -1,0 +1,113 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model ContextItem {
+  id          String   @id @default(cuid())
+  category    String   // project | goal | deadline | constraint | priority | preference
+  title       String
+  description String?
+  value       String?  // ISO date for deadlines; high/medium/low for priorities
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Collaborator {
+  id               String    @id @default(cuid())
+  name             String
+  email            String?
+  role             String?
+  relationshipType String    // advisor | teammate | investor | customer | partner
+  importanceLevel  Int       @default(3) // 1-5
+  preferredCadence String?   // weekly | biweekly | monthly | quarterly
+  notes            String?
+  lastContactDate  DateTime?
+  nextFollowUpDate DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
+
+model Task {
+  id              String    @id @default(cuid())
+  title           String
+  description     String?
+  status          String    @default("open")  // open | in_progress | done
+  aiPriority      Int?      // 1 = highest, set by Claude
+  manualPriority  Int?      // drag-to-reorder override; takes precedence over aiPriority
+  priorityLabel   String?   // critical | high | medium | low
+  priorityReason  String?   // Claude's one-line rationale
+  dueDate         DateTime?
+  linkedProjectId String?   // references a ContextItem id (category=project)
+  source          String    @default("manual") // manual | note_extraction | calendar | brief
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  completedAt     DateTime?
+}
+
+model MeetingNote {
+  id          String           @id @default(cuid())
+  title       String?
+  rawContent  String
+  source      String           @default("manual") // manual | granola
+  granolaId   String?
+  meetingDate DateTime?
+  createdAt   DateTime         @default(now())
+  extractions NoteExtraction[]
+}
+
+model NoteExtraction {
+  id                  String      @id @default(cuid())
+  noteId              String
+  decisionsJson       String      @default("[]")
+  openQuestionsJson   String      @default("[]")
+  actionItemsJson     String      @default("[]")
+  followUpsJson       String      @default("[]")
+  insightsJson        String      @default("[]")
+  calendarUpdatesJson String      @default("[]")
+  contextUpdatesJson  String      @default("[]")
+  taskSuggestionsJson String      @default("[]")
+  approvedAt          DateTime?
+  appliedAt           DateTime?
+  extractedAt         DateTime    @default(now())
+  note                MeetingNote @relation(fields: [noteId], references: [id], onDelete: Cascade)
+}
+
+model CalendarEventCache {
+  id                  String   @id @default(cuid())
+  googleEventId       String   @unique
+  title               String
+  description         String?
+  startTime           DateTime
+  endTime             DateTime
+  attendeesJson       String   @default("[]")
+  organizerEmail      String?
+  scoreImportance     Float?
+  scoreUrgency        Float?
+  scoreContribution   Float?
+  scoreRelationship   Float?
+  scoreAlignment      Float?
+  overallScore        Float?
+  scoringRationale    String?
+  primaryConcern      String?  // keep | challenge | eliminate
+  flagsJson           String   @default("[]")
+  proposedActionsJson String   @default("[]")
+  taskSuggestionsJson String   @default("[]")
+  userAction          String?  // approved | rejected | pending
+  cachedAt            DateTime @default(now())
+  expiresAt           DateTime
+}
+
+model DailyBriefCache {
+  id          String   @id @default(cuid())
+  date        String   @unique // YYYY-MM-DD
+  briefJson   String
+  generatedAt DateTime @default(now())
+  expiresAt   DateTime
+}
