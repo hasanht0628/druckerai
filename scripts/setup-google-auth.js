@@ -13,7 +13,6 @@
 
 const { google } = require("googleapis");
 const http = require("http");
-const url = require("url");
 const fs = require("fs");
 const path = require("path");
 const { execSync } = require("child_process");
@@ -64,14 +63,14 @@ try {
 
 // Local server to catch the callback
 const server = http.createServer(async (req, res) => {
-  const parsedUrl = url.parse(req.url, true);
+  const callbackUrl = new URL(req.url, REDIRECT_URI);
 
-  if (parsedUrl.pathname !== "/oauth2callback") {
+  if (callbackUrl.pathname !== "/oauth2callback") {
     res.end("Not found");
     return;
   }
 
-  const code = parsedUrl.query.code;
+  const code = callbackUrl.searchParams.get("code");
 
   if (!code) {
     res.end("No code received. Please try again.");
